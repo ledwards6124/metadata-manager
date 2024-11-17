@@ -53,10 +53,49 @@ const SongTile = ({ path }) => {
       return updatedData;
     });
   };
+
+  const uploadFile = async () => {
+
+
+      const file = await path.getFile();
+  
+      const metadata = {
+        TT2: formData.TT2?.data || 'null',
+        TP1: formData.TP1?.data || 'null',
+        TAL: formData.TAL?.data || 'null',
+        TCO: formData.TCO?.data || 'null',
+        TP2: formData.TP2?.data || 'null',
+        TYE: formData.TYE?.data || 'null',
+        TRK: formData.TRK?.data.replace(/\/.*/, '') || 'null',
+        TID: formData.TID?.data || 'null',
+      };
+  
+      const form = new FormData();
+      form.append('file', file);
+      form.append('metadata', JSON.stringify(metadata));
+
+      try {
+        fetch ('http://localhost:5000/files', {
+          method: 'POST',
+          body: form
+        }).then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+        }).then(jData => {
+          console.log(jData);
+        })
+
+      } catch (error) {
+        console.error(error);
+      }
+      
+  }
   
 
   const setModal = () => {
     setOpen(!open);
+    uploadFile();
   }
 
   const getAudio = async () => {
