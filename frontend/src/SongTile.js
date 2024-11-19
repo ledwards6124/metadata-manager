@@ -6,6 +6,23 @@ const SongTile = ({ path }) => {
   const [artwork, setArtwork] = useState('');
   const [open, setOpen] = useState(false);
 
+  const pythonHash = async (file) => {
+    // buffer the file
+      const buffer = await file.arrayBuffer();
+
+      // create sha-256 hash
+      const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+
+      // convert hash buffer to byte array
+      const hashArr = Array.from(new Uint8Array(hashBuffer));
+
+      //convert byte array to hex
+      const hashHex = hashArr.map(byte => byte.toString(16).padStart(2, '0')).join('');
+
+      //parse string to int
+      return parseInt(hashHex);
+  }
+  
 
   const readTags = async () => {
     try {
@@ -54,6 +71,63 @@ const SongTile = ({ path }) => {
     });
   };
 
+  const updateFile = async () => {
+    const file = await path.getFile();
+    const key = file.name;
+    const metadata = {
+      TT2: formData.TT2?.data || 'null',
+      TP1: formData.TP1?.data || 'null',
+      TAL: formData.TAL?.data || 'null',
+      TCO: formData.TCO?.data || 'null',
+      TP2: formData.TP2?.data || 'null',
+      TYE: formData.TYE?.data || 'null',
+      TRK: formData.TRK?.data.replace(/\/.*/, '') || 'null',
+      TID: formData.TID?.data || 'null',
+      key: key
+    };
+
+    try {
+      fetch('http://localhost:5000/files', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(metadata)
+    }).then(response => {
+      if (response.status === 200) {
+        return response.json();
+      }
+    }).then(jData => {
+      if (jData) {
+        console.log(jData);
+      }
+    })
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const downloadFile = async () => {
+    const key = path.name;
+    fetch(`http://localhost:5000/files?key=${key}`, {
+      method: 'GET'
+    }).then(response => {
+      if (response.status === 200) {
+        return response.blob();
+      }
+    }).then(buffer => {
+      const blob = new Blob([buffer], { type: 'audio/*' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `modified_${key}`
+      a.click();
+      URL.revokeObjectURL(url);
+      a.remove();
+    })
+
+  }
+
   const uploadFile = async () => {
 
 
@@ -75,7 +149,7 @@ const SongTile = ({ path }) => {
       form.append('metadata', JSON.stringify(metadata));
 
       try {
-        fetch ('http://localhost:5000/files', {
+        fetch ('http://127.0.0.1:5000/files', {
           method: 'POST',
           body: form
         }).then(response => {
@@ -94,8 +168,8 @@ const SongTile = ({ path }) => {
   
 
   const setModal = () => {
-    setOpen(!open);
     uploadFile();
+    setOpen(!open);
   }
 
   const getAudio = async () => {
@@ -115,6 +189,7 @@ const SongTile = ({ path }) => {
         }
       })
   }
+ 
   
 
   return (
@@ -192,10 +267,18 @@ const SongTile = ({ path }) => {
             onChange={handleInputChange}
             />
         </label>
-        <input
-        type='button'
-        value='Submit'
-        />
+        <div>
+            <input
+            type='button'
+            value='Submit'
+            onClick={updateFile}
+            />
+            <input
+            type='button'
+            value='Download'
+            onClick={downloadFile}
+            />
+        </div>
       </form>}
     </div>
   );

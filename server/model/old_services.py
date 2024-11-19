@@ -1,6 +1,7 @@
 import datetime
 import os
 from mutagen.id3 import ID3, ID3NoHeaderError, TIT2, TPE1, TPE2, TALB, TRCK, TCON, APIC, TDRC
+from services import compute_key
 
 class Services:
     
@@ -141,5 +142,8 @@ class Services:
                 path = os.path.join(root, name)
                 if not self.is_audio(path):
                     self.delete_file(path)
+                    
+def main():
+    pass
 
             
