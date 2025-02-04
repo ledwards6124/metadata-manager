@@ -1,0 +1,14 @@
+{
+    "name": "mp3-metadata-editor",
+    "version": "1.0.0",
+    "scripts": {
+      "start": "concurrently 'npm start --prefix frontend' 'npm start --prefix electron'",
+      "build": "npm run build --prefix frontend && mvn package --prefix backend",
+      "package": "electron-packager . --out=dist --overwrite"
+    },
+    "devDependencies": {
+      "concurrently": "^7.0.0",
+      "electron": "^23.0.0",
+      "electron-packager": "^17.0.0"
+    }
+  }
