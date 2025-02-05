@@ -19,6 +19,10 @@
     "typescript-eslint": "^8.23.0"
   },
   "dependencies": {
-    "express": "^4.21.2"
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "fs": "^0.0.1-security",
+    "music-metadata": "^10.8.3",
+    "node-id3": "^0.2.7"
   }
 }

@@ -5,11 +5,8 @@ target/
 *.war
 *.ear
 
-# Ignore Maven specific files
-.mvn/
-!/.mvn/wrapper/maven-wrapper.jar
-**/mvnw
-**/mvnw.cmd
+#Ignore Node build
+/backend/dist/
 
 # Ignore general IDE/project files
 .idea/
@@ -46,3 +43,4 @@ coverage/
 .DS_Store
 Thumbs.db
 
+.vscode
