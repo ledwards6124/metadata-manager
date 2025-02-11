@@ -1,31 +1,31 @@
-import logo from './logo.svg';
 import './App.css';
 import { useState } from 'react';
 
+import SongUpload from './SongUpload';
+import Song from "./Song";
+
+
 function App() {
 
-  const [text, setText] = useState('');
+  const [songs, setSongs] = useState([]);
 
-  const path = '..\\data\\flowers.mp3'
-
-
-  const call = () => {
-    
-    fetch('http://localhost:5000/mp3?path=' + path, {
-      method: 'GET'
-    }).then(res => {
-      return res.text();
-    }).then(jData => {
-      console.log(jData);
-      setText(jData);
-    })
+  const addSong = (song) => {
+    if (songs.includes(song)) {
+      return;
+    }
+    setSongs([...songs, song]);
   }
+
+  const clearSongs = () => {
+    setSongs([]);
+  }
+
 
   return (
     <>
     <h1>Metadata Manager</h1>
-    <button onClick={call}>Click me</button>
-    <p>{text}</p>
+    <SongUpload addSong={addSong} />
+      {songs.length > 0 && songs.map((song, idx) => <Song key={idx} name={song.name} />)}
     </>
   );
 }

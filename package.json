@@ -2,14 +2,16 @@
     "name": "mp3-metadata-editor",
     "version": "1.0.0",
     "scripts": {
-        "start": "concurrently \"npm run start-backend\" \"npm run start-frontend\" \"npm run start-electron\"",
-        "build": "npm run build --prefix frontend && mvn package --prefix backend",
+        "start": "concurrently \"npm run start-frontend\" \"npm run start-electron\"",
+        "build": "npm run build --prefix frontend",
         "package": "electron-packager . --out=dist --overwrite",
-        "start-backend": "cd backend && npx tsc && node dist/app.js",
         "start-frontend": "cd frontend && npm start",
         "start-electron": "cd electron && npm start"
     },
     "devDependencies": {
         "concurrently": "^7.6.0"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.7"
     }
 }

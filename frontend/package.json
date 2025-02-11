@@ -4,6 +4,12 @@
   "private": true,
   "dependencies": {
     "cra-template": "1.2.0",
+    "electron": "^34.1.0",
+    "fs": "^0.0.1-security",
+    "music-metadata": "^10.9.0",
+    "node-id3": "^0.2.7",
+    "node-id3tag": "github:kbuffington/node-id3tag",
+    "path": "^0.12.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-scripts": "5.0.1",
